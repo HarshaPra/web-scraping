@@ -1,0 +1,22 @@
+{
+  "name": "web-scriping",
+  "version": "1.0.0",
+  "description": "scriping websites",
+  "main": "index.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/index.ts"
+  },
+  "author": "harshaPra",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "axios": "^1.7.3",
+    "cheerio": "^1.0.0",
+    "puppeteer": "^23.0.2"
+  }
+}
