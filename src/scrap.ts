@@ -1,12 +1,12 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 
-interface CarBrand {
+interface Models {
   brandName: string;
-  models: string[];
+  models: {model: string, category: string}[];
 }
 
-export async function scrapingBot(url: string): Promise<CarBrand[]> {
+export async function scrapingBot(url: string): Promise<Models[]> {
   try {
     const response = await axios.get(url);
     const $ = cheerio.load(response.data);
@@ -19,9 +19,13 @@ export async function scrapingBot(url: string): Promise<CarBrand[]> {
         try {
           const modelResponse = await axios.get(modelUrl);
           const $modelPage = cheerio.load(modelResponse.data);
-          const models = $modelPage('.carmod h4').map((_, modelElement) =>
-            $modelPage(modelElement).text().trim()
-          ).get();
+          const models = $modelPage('.carmod').map((_, modelElement) => {
+            const $model = $modelPage(modelElement);
+            return {
+              model: $model.find('h4').text(),
+              category: $model.find('p.body').text()
+            };
+          }).get(); 
 
           return { brandName, models };
         } catch (modelError) {
@@ -33,10 +37,9 @@ export async function scrapingBot(url: string): Promise<CarBrand[]> {
     }).get();
 
     const brands = await Promise.all(brandPromises);
-    return brands.filter((brand): brand is CarBrand => brand !== null);
+    return brands.filter((brand): brand is Models => brand !== null);
 
   } catch (error) {
-    console.error('Error in scrapingBot:', error);
     throw error;
   }
 }

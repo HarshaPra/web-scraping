@@ -1,15 +1,14 @@
-import {scrapingBot} from './scrap';
-import {saveData} from "./saveData";
+import { scrapingBot } from './scrap';
+import { saveData } from "./saveData";
 
 async function main () {
 
-  // https://www.autoevolution.com/cars/
-
- const data = await scrapingBot('https://www.autoevolution.com/cars/');
-
- if(data) {
-  await saveData(data, 'cars.json')
- }
+  await scrapingBot(process.env.URL ?? '').then( async (data) => {
+  await saveData(data, 'file-name.json');
+  console.log('Congratulations 🎉! I have successfully retrieved the data.');
+ }).catch((error) => {
+  console.error(error);
+ });
 
 }
 
